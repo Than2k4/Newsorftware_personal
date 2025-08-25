@@ -1,29 +1,23 @@
-import express from "express";
-import bodyParser from "body-parser";
-import viewEngine from "./config/viewEngine.js";  // <--- sửa ở đây
-import initWebRoutes from "./route/web.js";       // nếu dùng ESM, thêm .js
-import connectDB from "./config/configDB.js";     // nếu dùng ESM, thêm .js
-import dotenv from "dotenv";
-
-dotenv.config();
+import express from "express"; //nap express
+import bodyParser from "body-parser"; //nap body-parser lay tham so tu client /user?id=7
+import viewEngine from './config/viewEngine.js'; //nap viewEngine
+import initWebRoutes from './route/web.js'; //nap file web từ Route
+import connectDB from './config/configDB.js';
+require('dotenv').config(); //goi hàm config của dotenv để chạy lệnh process.env.PORT
 
 let app = express();
 
-// Config app
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// Config view engine
+//config app
+app.use(bodyParser. json());
+app.use(bodyParser.urlencoded({ extended: true }))
 viewEngine(app);
-
-// Init routes
 initWebRoutes(app);
-
-// Connect database
 connectDB();
 
-let port = process.env.PORT || 6969;
-
+let port = process.env. PORT || 6969; //tao tham so port lay từ .env
+//Port === undefined => port = 6969
+//chay server
 app.listen(port, () => {
-    console.log("🚀 Backend Nodejs is running on the port: " + port);
-});
+//callback
+console.log("Backend Nodejs is runing on the port : " + port)
+})

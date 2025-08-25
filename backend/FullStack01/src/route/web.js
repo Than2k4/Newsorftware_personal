@@ -1,24 +1,25 @@
-import express from "express"; 
-import homeController from "../controllers/homeController.js"; // thêm .js
+import express from "express"; // gọi Express
+import homeController from "../controllers/homeController"; // gọi controller
 
-const router = express.Router();
+let router = express.Router();  // khởi tạo Route
 
-const initWebRoutes = (app) => {
-    router.get("/", (req, res) => {
-        return res.send("Nguyễn Hữu Trung");
+let initWebRoutes = (app) => {
+    // cách 1:
+    router.get('/', (req, res) => {
+        return res.send('Châu Văn Thân');
     });
+    
+    // cách 2: gọi hàm trong controller
+    router.get('/home', homeController.getHomePage); // url cho trang chủ
+    router.get('/about', homeController.getAboutPage); // url cho trang about
+    router.get('/crud', homeController.getCRUD); // url get crud
+    router.post('/post-crud', homeController.postCRUD); // url post crud
+    router.get('/get-crud', homeController.getfindAllCrud); // url lấy findAll
+    router.get('/edit-crud', homeController.getEditCRUD); // url get editcrud
+    router.post('/put-crud', homeController.putCRUD); // url put crud
+    router.get('/delete-crud', homeController.deleteCRUD); // url get delete crud
 
-    router.get("/home", homeController.getHomePage);
-    router.get("/about", homeController.getAboutPage);
-    router.get("/crud", homeController.getCRUD);
+    return app.use("/", router); // url mặc định
+}
 
-    router.post("/post-crud", homeController.postCRUD);
-    router.get("/get-crud", homeController.getFindAllCrud); // sửa tên hàm
-    router.get("/edit-crud", homeController.getEditCRUD);
-    router.post("/put-crud", homeController.putCRUD);
-    router.get("/delete-crud", homeController.deleteCRUD);
-
-    return app.use("/", router);
-};
-
-export default initWebRoutes;
+export default initWebRoutes; // Sử dụng export ES6

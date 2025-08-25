@@ -1,82 +1,106 @@
-import db from '../models/index.js';        // import database
-import CRUDService from '../services/CRUDService.js'; // import service
+import db from '../models/index'; // import database
+import CRUDService from '../services/CRUDService'; // import service
 
 // Hàm getHomePage
-const getHomePage = async (req, res) => {
+let getHomePage = async (req, res) => {
     try {
-        const data = await db.User.findAll();
-        console.log('....................');
+        let data = await db.User.findAll(); // lấy dữ liệu từ models/index
+        console.log('......');
         console.log(data);
-        console.log('....................');
-
+        console.log('......');
         return res.render('homepage.ejs', {
-            data: JSON.stringify(data)
+            data: JSON.stringify(data) // trả dữ liệu data về view
         });
     } catch (e) {
-        console.error(e);
+        console.log(e);
     }
-};
+}
 
 // Hàm getAbout
-const getAboutPage = (req, res) => {
+let getAboutPage = (req, res) => {
     return res.render('test/about.ejs');
-};
+}
 
-// Hàm get CRUD
-const getCRUD = (req, res) => {
+// Export các hàm
+module.exports = {
+    getHomePage: getHomePage,
+    getAboutPage: getAboutPage
+}
+// Hàm CRUD
+let getCRUD = (req, res) => {
     return res.render('crud.ejs');
-};
+}
 
 // Hàm findAll CRUD
-const getFindAllCrud = async (req, res) => {
-    const data = await CRUDService.getAllUser();
-    return res.render('users/findAllUser.ejs', { datalist: data });
-};
+let getfindAllCrud = async (req, res) => {
+    let data = await CRUDService.getAllUser();
+    // console.log('---');
+    // console.log(data);
+    // console.log('---');
+    // return res.send('FindAll crud to server');
+    return res.render('users/findAlluser.ejs', {
+        datalist: data
+    });
+    // gọi view và truyền dữ liệu ra view
+}
 
 // Hàm post CRUD
-const postCRUD = async (req, res) => {
-    const message = await CRUDService.createNewUser(req.body);
+let postCRUD = async (req, res) => { // dùng async để xử lý bất đồng bộ
+    let message = await CRUDService.createNewUser(req.body); // gọi service
+    // console.log(req.body); // lấy thông tin body của http request
     console.log(message);
-    return res.send('Post CRUD thành công!');
-};
-
+    return res.send('Post crud to server');
+}
 // Hàm lấy dữ liệu để edit
-const getEditCRUD = async (req, res) => {
-    const userId = req.query.id;
-    if (userId) {
-        const userData = await CRUDService.getUserInfoById(userId);
-        return res.render('users/editUser.ejs', { data: userData });
+let getEditCRUD = async (req, res) => {
+    let userId = req.query.id;
+    if (userId) { // check Id
+        let userData = await CRUDService.getUserInfoById(userId);
+        // console.log('---');
+        // console.log(userData);
+        // console.log('---');
+        return res.render('users/updateUser.ejs', {
+            data: userData
+        });
     } else {
         return res.send('Không lấy được id');
     }
-};
+}
 
-// Hàm update CRUD
-const putCRUD = async (req, res) => {
-    const data = req.body;
-    const allUsers = await CRUDService.updateUser(data);
-    return res.render('users/findAllUser.ejs', { datalist: allUsers });
-};
+// console.log(req.query.id);
 
-// Hàm delete CRUD
-const deleteCRUD = async (req, res) => {
-    const id = req.query.id;
+let putCRUD = async (req, res) => {
+    let data = req.body;
+    let data1 = await CRUDService.updateUser(data); // update rồi hiển thị lại danh sách user
+    // let data1 = await CRUDService.getAllUser(); // hiển thị danh sách user
+    return res.render('users/findAllUser.ejs', {
+        datalist: data1
+    });
+    // return res.send('update thành công');
+}
+let deleteCRUD = async (req, res) => {
+    let id = req.query.id; // vì trên view ?id=1
     if (id) {
         await CRUDService.deleteUserById(id);
-        return res.send('Deleted thành công!');
+        return res.send('Deleted!!!!!!!!!!!!!');
     } else {
-        return res.send('Không tìm thấy user');
+        return res.send('Not find user');
     }
-};
+}
 
-// Export chuẩn ESM
-export default {
-    getHomePage,
-    getAboutPage,
-    getCRUD,
-    postCRUD,
-    getFindAllCrud,
-    getEditCRUD,
-    putCRUD,
-    deleteCRUD
-};
+// object: {
+// key: '',
+// value: ''
+// }
+
+// export ra object
+module.exports = {
+    getHomePage: getHomePage,
+    getAboutPage: getAboutPage,
+    getCRUD: getCRUD,
+    postCRUD: postCRUD,
+    getfindAllCrud: getfindAllCrud,
+    getEditCRUD: getEditCRUD,
+    putCRUD: putCRUD,
+    deleteCRUD: deleteCRUD
+}
