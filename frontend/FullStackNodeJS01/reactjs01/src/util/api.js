@@ -35,18 +35,36 @@ const getProductsApi = (page = 1, limit = 10, categoryId = null) => {
 };
 
 const searchProductsApi = ({ keyword = "", categoryId, minPrice, maxPrice }) => {
-  let URL_API = `/v1/api/products/search?keyword=${encodeURIComponent(keyword)}`;
-  if (categoryId) URL_API += `&categoryId=${categoryId}`;
-  if (minPrice) URL_API += `&minPrice=${minPrice}`;
-  if (maxPrice) URL_API += `&maxPrice=${maxPrice}`;
+    let URL_API = `/v1/api/products/search?keyword=${encodeURIComponent(keyword)}`;
+    if (categoryId) URL_API += `&categoryId=${categoryId}`;
+    if (minPrice) URL_API += `&minPrice=${minPrice}`;
+    if (maxPrice) URL_API += `&maxPrice=${maxPrice}`;
 
-  return axios.get(URL_API).then((res) => ({
-    products: res?.products || [],
-    total: res?.total || 0,
-  }));
+    return axios.get(URL_API).then((res) => ({
+        products: res?.products || [],
+        total: res?.total || 0,
+    }));
+};
+
+const searchProductSByES = ({ keyword = "", categoryId, minPrice, maxPrice }) => {
+    let URL_API = `/v1/api/elasticsearch/search?`;
+
+    URL_API += `index=products`;
+    if (keyword.trim()) URL_API += `&name=${encodeURIComponent(keyword.trim())}`;
+    if (categoryId?.toString().trim()) URL_API += `&categoryId=${categoryId}`;
+    if (minPrice?.toString().trim()) URL_API += `&minPrice=${minPrice}`;
+    if (maxPrice?.toString().trim()) URL_API += `&maxPrice=${maxPrice}`;
+
+    console.log("URL_API:", URL_API); // Debug line to check the constructed URL
+
+    return axios.get(URL_API).then((res) => ({
+        products: res?.products || [],
+        total: res?.total || 0,
+    }));
 };
 
 
+
 export {
-    createUserApi, loginApi, getUserApi, getProductsApi, searchProductsApi
+    createUserApi, loginApi, getUserApi, getProductsApi, searchProductsApi, searchProductSByES
 }

@@ -7,6 +7,9 @@ const connection = require('./config/database');
 const { getHomepage } = require('./controllers/homeController');
 const cors = require('cors');
 const productRoutes = require("./routes/product");
+const elasticsearchRoutes = require('./routes/elasticsearchRoutes');
+
+
 const app = express(); //cấu hình app là express
 //cấu hình port, nếu tìm thấy port trong env, không thì trả về 8888
 const port = process.env.PORT || 8888;
@@ -19,6 +22,7 @@ configViewEngine(app);//config template engine
 const webAPI = express.Router();
 webAPI.get("/", getHomepage);
 app.use("/v1/api/products", productRoutes);
+app.use('/v1/api/elasticsearch', elasticsearchRoutes);
 app.use('/', webAPI);
 //khai báo route cho API
 app.use('/v1/api/', apiRoutes);

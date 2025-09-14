@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { getProductsApi, searchProductsApi } from "../util/api";
+import { getProductsApi, searchProductsApi, searchProductSByES } from "../util/api";
 import "../styles/home.css";
 
 const Home = () => {
@@ -49,7 +49,7 @@ const Home = () => {
     try {
       setLoading(true);
       setIsSearching(true);
-      const res = await searchProductsApi({
+      const res = await searchProductSByES({
         keyword,
         categoryId,
         minPrice,
@@ -64,6 +64,7 @@ const Home = () => {
     }
   };
 
+  console.log("products:", products); 
   // load lần đầu
   useEffect(() => {
     if (!didFetch.current) {
